@@ -1,0 +1,4 @@
+﻿  test.cpp
+D:\VSProject\408\test.cpp(245,8): warning C4101: “j”: 未引用的局部变量
+D:\VSProject\408\test.cpp(245,6): warning C4101: “i”: 未引用的局部变量
+  408.vcxproj -> D:\VSProject\408\Debug\408.exe
