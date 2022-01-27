@@ -525,7 +525,7 @@ int findPrimaryElem(int A[],int n)
 
 // (((()()))
 // ())()
-int match(char exp[], int n)
+int chapter3_match(char exp[], int n)
 {
 	char stack[maxSize];
 	int top = -1;
@@ -552,6 +552,60 @@ int match(char exp[], int n)
 	return top == -1 ? 1 : 0;
 }
 
+int op(int a,int b,char op)
+{
+	switch (op)
+	{
+	case '*':
+		return a * b;
+	case '+':
+		return a + b;
+	case '-':
+		return a - b;
+	case '/':
+	{
+		if (b == 0)
+		{
+			cout << "error" << endl;
+			return 0;
+		}
+		else
+		{
+			return a / b;
+		}
+	}
+	default:
+		break;
+	}
+}
+
+// 1234*++5/
+// (1+2+3*4)/5
+int chapter3_valueOfRPN(char exp[])
+{
+	int stack[maxSize];
+	int top = -1;
+	int i;
+	for (i = 0 ; exp[i] != '\0'; ++i)
+	{
+		if (exp[i] <= '9' && exp[i] >= '0')
+		{
+			stack[++top] = exp[i] - '0';
+		}
+		else
+		{
+			int a = stack[top--];
+			int b = stack[top--];
+			stack[++top] = op(b, a, exp[i]);
+		}
+	}
+	return stack[top];
+}
+
+// f   r
+// |   |
+// 1-2-3-^
+
 
 
 int main()
@@ -571,6 +625,18 @@ int main()
 	L.data[5] = 7;
 	L.data[6] = 5;
 	L.data[7] = 5;
+
+	char exp[10];
+	exp[0] = '1';
+	exp[1] = '2';
+	exp[2] = '3';
+	exp[3] = '4';
+	exp[4] = '*';
+	exp[5] = '+';
+	exp[6] = '+';
+	exp[7] = '5';
+	exp[8] = '/';
+	exp[9] = '\0';
 	//L.length = 9;
 	//insertElem(L, 5, findElem(L, 5));
 	//chapter2_4_removeRange(L, 3, 5);
@@ -592,7 +658,7 @@ int main()
 	//LNode* B = chapter2_9_split(A);
 	//LNode* B = createList();
 	//chapter2_simulation2(A, B);
-	cout<< findPrimaryElem (L.data,8)<<endl;
+	cout<< chapter3_valueOfRPN(exp) << endl;
 	//LNode* C = nullptr;
 	//merge_reverse(A, B, C);
 	//LNode* c = C->next;
