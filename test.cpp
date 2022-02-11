@@ -602,11 +602,179 @@ int chapter3_valueOfRPN(char exp[])
 	return stack[top];
 }
 
-// f   r
-// |   |
-// 1-2-3-^
+typedef struct SharedStack
+{
+	int elem[maxSize];
+	int top0;
+	int top1;
+}SharedStack;
 
+void chapter3_simulation1_initStack(SharedStack &s)
+{
+	s.top0 = -1;
+	s.top1 = maxSize;
+}
 
+int chapter3_simulation1_push(SharedStack& s, int stNo, int x)
+{
+	if (s.top0 + 1 == s.top1)
+	{
+		return 0;
+	}
+	if (stNo == 0)
+	{
+		s.elem[++s.top0] = x;
+		return 1;
+	}
+	else if (stNo == 1)
+	{
+		s.elem[--s.top1] = x;
+		return 1;
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+int chapter3_simulation1_pop(SharedStack& s, int stNo, int &x)
+{
+	if (stNo == 0)
+	{
+		if (s.top0 == -1)
+		{
+			return 0;
+		}
+		else
+		{
+			x = s.elem[s.top0--];
+			return 1;
+		}
+	}
+	else if(stNo == 1)
+	{
+		if (s.top1 == maxSize)
+		{
+			return 0;
+		}
+		else
+		{
+			x = s.elem[s.top1++];
+			return 1;
+		}
+	}
+	else
+	{
+		return -1;
+	}
+}
+
+typedef struct 
+{
+	int data[maxSize];
+	int top;
+}SqStack;
+
+int isEmpty(SqStack s)
+{
+	if (s.top == -1)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void push(SqStack& ST, int x)
+{
+	if (ST.top + 1 == maxSize)
+	{
+		return;
+	}
+	else
+	{
+		ST.data[++ST.top] = x;
+	}
+}
+
+void pop(SqStack& ST, int& x)
+{
+	if (isEmpty(ST))
+	{
+		return;
+	}
+	else
+	{
+		x = ST.data[ST.top--];
+	}
+}
+
+int chapter3_simulation2_enqueue(SqStack& s1,SqStack& s2,int x)
+{
+	if (s1.top + 1 == maxSize && !isEmpty(s2)) // 如果s2不空且s1已满，则队列已满，无法入队
+	{
+		return 0;
+	}
+	else
+	{
+		if (s1.top + 1 == maxSize) //s1已满，且s2为空，则将s1栈元素全部逐个出栈并压入s2栈
+		{
+			while (!isEmpty(s1))
+			{
+				int temp;
+				pop(s1,temp);
+				push(s2,temp);
+			}
+			push(s1, x); // 此时s1已空，将元素进栈
+		}
+		else
+		{
+			push(s1, x); // s1未满，直接进s1栈即可
+		}
+		return 1;
+	}
+}
+
+int chapter3_simulation2_isQueueEmpty(SqStack s1,SqStack s2)
+{
+	if (isEmpty(s1) && isEmpty(s2)) //如果s1和s2均为空，则队列才为空
+	{
+		return 1;
+	}
+	else // 如果s1和s2有任一不为空，则队列不为空
+	{
+		return 0;
+	}
+}
+
+int chapter3_simulation2_dequeue(SqStack& s1, SqStack& s2, int &x)
+{
+	if (chapter3_simulation2_isQueueEmpty(s1,s2)) // 如果队列为空，无法出队
+	{
+		return 0;
+	}
+	else
+	{
+		if (s2.top == -1) // 如果s2为空，将s1元素全部逐个出栈并压入s2栈
+		{
+
+			while (!isEmpty(s1))
+			{
+				int temp;
+				pop(s1, temp);
+				push(s2, temp);
+			}
+			pop(s2, x); // 此时将s2栈顶元素出栈即可
+		}
+		else
+		{
+			pop(s2, x); //s2不为空，直接取出s2栈顶元素
+		}
+		return 1;
+	}
+}
 
 int main()
 {
