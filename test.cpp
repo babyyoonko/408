@@ -669,11 +669,6 @@ int chapter3_simulation1_pop(SharedStack& s, int stNo, int &x)
 	}
 }
 
-typedef struct 
-{
-	int data[maxSize];
-	int top;
-}SqStack;
 
 int isEmpty(SqStack s)
 {
@@ -751,7 +746,7 @@ int chapter3_simulation2_isQueueEmpty(SqStack s1,SqStack s2)
 
 int chapter3_simulation2_dequeue(SqStack& s1, SqStack& s2, int &x)
 {
-	if (chapter3_simulation2_isQueueEmpty(s1,s2)) // 如果队列为空，无法出队
+	if (chapter3_simulation2_isQueueEmpty(s1,s2)) // 如 果队列为空，无法出队
 	{
 		return 0;
 	}
@@ -775,6 +770,351 @@ int chapter3_simulation2_dequeue(SqStack& s1, SqStack& s2, int &x)
 		return 1;
 	}
 }
+
+// 4 3 5 6 1 2
+int chapter3_3_3_judege(char ch[])
+{
+	int i = 0;
+	int I = 0;
+	int O = 0;
+	while (ch[i] != '\0')
+	{
+		if (ch[i] == 'I')
+		{
+			++I;
+		}
+		else if(ch[i] == 'O')
+		{
+			++O;
+			if (O > I)
+			{
+				return 0;
+			}
+		}
+		++i;
+	}
+	if (I != O)
+	{
+		return 0;
+	}
+	else
+	{
+		return 1;
+	}
+}
+
+void chapter3_6_enqueue(LNode*& rear,int x)
+{
+	LNode* p = (LNode*)malloc(sizeof(LNode));
+	p->data = x;
+	p->next = rear->next;
+	rear->next = p;
+	rear = p;
+}
+
+void chapter3_6_dequeue(LNode*& rear, int &x)
+{
+	if (rear->next == rear)
+	{
+		return;
+	}
+	LNode* head = rear->next;
+	LNode* p = head->next;
+	x = p->data;
+	head->next = head->next->next;
+	if (p == rear)
+	{
+		rear = head;
+	}
+	free(p);
+}
+
+typedef struct
+{
+	int data[maxSize];
+	int front;
+	int rear;
+}chapter3_7_dbqueue;
+
+int charpter3_7_dequeueFromRear(chapter3_7_dbqueue &q, int& x)
+{
+	if (q.front == q.rear)
+	{
+		return 0;
+	}
+	x = q.data[q.rear];
+	q.rear = (q.rear - 1 + maxSize) % maxSize;
+	return 1;
+}
+
+int charpter3_7_enqueueFromFront(chapter3_7_dbqueue& q, int x)
+{
+	if ((q.rear+1)%maxSize == q.rear)
+	{
+		return 0;
+	}
+	q.data[q.front] = x;
+	q.front = (q.front - 1 + maxSize) % maxSize;
+	return 1;
+}
+
+typedef struct
+{
+	int data[maxSize];
+	int front;
+	int rear;
+	int tag;
+}chapter_3_8_cycqueue;
+
+void initCycqueue(chapter_3_8_cycqueue& q)
+{
+	q.front = 0;
+	q.rear = 0;
+	q.tag = 0;
+}
+
+int isQueueEmpty(chapter_3_8_cycqueue q)
+{
+	if (q.front == q.rear && q.tag == 0)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int isQueueFull (chapter_3_8_cycqueue q)
+{
+	if (q.front == q.rear && q.tag == 1)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int chapter_3_8_enqueue(chapter_3_8_cycqueue& q, int x)
+{
+	if (isQueueFull(q)==1)
+	{
+		return 0;
+	}
+	else
+	{
+		q.tag = 1;
+		q.rear = (q.rear + 1) % maxSize;
+		q.data[q.rear] = x;
+		return 1;
+	}
+}
+
+int chapter_3_8_dequeue(chapter_3_8_cycqueue& q, int &x)
+{
+	if (isQueueEmpty(q)==1)
+	{
+		return 0;
+	}
+	else
+	{
+		q.front = (q.front + 1) % maxSize;
+		x = q.data[q.front];
+		q.tag = 0;
+		return 1;
+	}
+}
+
+int transform(int N)
+{
+	int stack[maxSize];
+	int top = -1;
+	while (N != 0)
+	{
+		stack[++top] = N % 2;
+		N = N / 2;
+	}
+	int result = 0;
+	while (top != -1)
+	{
+		result = result * 10 + stack[top--];
+	}
+	return result;
+}
+
+int chapter_3_10_match(char c[])
+{
+	SqStack2 s;
+	s.top = -1;
+	int i = 0;
+	while (c[i] != '\0')
+	{
+		if (c[i] == 39)
+		{
+			++i;
+			while (c[i] != 39)
+			{
+				++i;
+			}
+			++i;
+		}
+		else if (c[i] == 34)
+		{
+			++i;
+			while (c[i] != 34)
+			{
+				++i;
+			}
+			++i;
+		}
+		else if(c[i] == '(' || c[i] == '[' || c[i] == '{')
+		{
+			push(s, c[i]);
+		}
+		else
+		{
+			char topElem;
+			getTop(s, topElem);
+			switch (c[i])
+			{
+			case ')':
+				if (topElem != '(')
+				{
+					return 0;
+				}
+				else
+				{
+					pop(s,topElem);
+					break;
+				}
+			case '}':
+				if (topElem != '{')
+				{
+					return 0;
+				}
+				else
+				{
+					pop(s, topElem);
+					break;
+				}
+			case ']':
+				if (topElem != '[')
+				{
+					return 0;
+				}
+				else
+				{
+					pop(s, topElem);
+					break;
+				}
+			default:
+				break;
+			}
+		}
+		++i;
+	}
+	if (isEmpty(s))
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+int isEmpty(SqStack2 s)
+{
+	if (s.top == -1)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void push(SqStack2& ST, char x)
+{
+	if (ST.top + 1 == maxSize)
+	{
+		return;
+	}
+	else
+	{
+		ST.data[++ST.top] = x;
+	}
+}
+
+void pop(SqStack2& ST, char& x)
+{
+	if (isEmpty(ST))
+	{
+		return;
+	}
+	else
+	{
+		x = ST.data[ST.top--];
+	}
+}
+
+void getTop(SqStack2 s, char& x)
+{
+	if (!isEmpty(s))
+	{
+		x = s.data[s.top];
+	}
+}
+
+int charpter_3_11_sqrt_recursively(float A, float p, float e)
+{
+	if (fabs(p * p - A) < e)
+	{
+		return p;
+	}
+	else
+	{
+		return charpter_3_11_sqrt_recursively(A, (p + A / p) / 2, e);
+	}
+}
+
+int charpter_3_11_sqrt_nonrecursively(float A, float p, float e)
+{
+	float stack[maxSize];
+	int top = -1;
+	stack[++top] = (p + A / p) / 2;
+	while (top != -1)
+	{
+		float pt = stack[top--];
+		if (fabs(pt * pt - A) < e)
+		{
+			return pt;
+		}
+		else
+		{
+			stack[++top] = (pt + A / pt) / 2;
+		}
+	}
+}
+
+int charpter_3_11_sqrt_nonrecursively2(float A, float p, float e)
+{
+	while (fabs(p * p - A) >= e)
+	{
+		p = (p + A / p) / 2;
+	}
+	return p;
+}
+
+//A B C D E
+int charpter_3_12_permutation(char c[], int k, int n)
+{
+	return 0;
+}
+
 
 int main()
 {
