@@ -37,3 +37,59 @@ typedef struct
 	LNode* front;
 	LNode* rear;
 }LiQueue;
+
+typedef struct
+{
+	char* ch;
+	int length;
+}Stra;
+
+typedef struct
+{
+	char str[maxSize + 1];
+	int length;
+}Strb;
+
+
+typedef struct BTNode
+{
+	int data;
+	struct BTNode* lchild;
+	struct BTNode* rchild;
+}BTNode;
+
+
+
+typedef struct
+{
+	int no;
+}VertexType;
+
+typedef struct
+{
+	int n;
+	int e;
+	int edges[maxSize][maxSize];
+	VertexType vex[maxSize];
+}MGraph;
+
+
+
+typedef struct ArcNode
+{
+	int adjvex;
+	struct ArcNode* nextarc;
+}ArcNode;
+
+typedef struct
+{
+	int data;
+	ArcNode* firstarc;
+}VNode;
+
+typedef struct
+{
+	int n;
+	int e;
+	VNode adjlist[maxSize];
+}AGraph;

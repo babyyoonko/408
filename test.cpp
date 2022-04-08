@@ -944,6 +944,50 @@ int transform(int N)
 	return result;
 }
 
+int isEmpty2(SqStack2 s)
+{
+	if (s.top == -1)
+	{
+		return 1;
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+void push2(SqStack2& ST, char x)
+{
+	if (ST.top + 1 == maxSize)
+	{
+		return;
+	}
+	else
+	{
+		ST.data[++ST.top] = x;
+	}
+}
+
+void pop2(SqStack2& ST, char& x)
+{
+	if (isEmpty2(ST))
+	{
+		return;
+	}
+	else
+	{
+		x = ST.data[ST.top--];
+	}
+}
+
+void getTop(SqStack2 s, char& x)
+{
+	if (!isEmpty2(s))
+	{
+		x = s.data[s.top];
+	}
+}
+
 int chapter_3_10_match(char c[])
 {
 	SqStack2 s;
@@ -971,7 +1015,7 @@ int chapter_3_10_match(char c[])
 		}
 		else if(c[i] == '(' || c[i] == '[' || c[i] == '{')
 		{
-			push(s, c[i]);
+			push2(s, c[i]);
 		}
 		else
 		{
@@ -986,7 +1030,7 @@ int chapter_3_10_match(char c[])
 				}
 				else
 				{
-					pop(s,topElem);
+					pop2(s,topElem);
 					break;
 				}
 			case '}':
@@ -996,7 +1040,7 @@ int chapter_3_10_match(char c[])
 				}
 				else
 				{
-					pop(s, topElem);
+					pop2(s, topElem);
 					break;
 				}
 			case ']':
@@ -1006,7 +1050,7 @@ int chapter_3_10_match(char c[])
 				}
 				else
 				{
-					pop(s, topElem);
+					pop2(s, topElem);
 					break;
 				}
 			default:
@@ -1015,7 +1059,7 @@ int chapter_3_10_match(char c[])
 		}
 		++i;
 	}
-	if (isEmpty(s))
+	if (isEmpty2(s))
 	{
 		return 1;
 	}
@@ -1025,49 +1069,7 @@ int chapter_3_10_match(char c[])
 	}
 }
 
-int isEmpty(SqStack2 s)
-{
-	if (s.top == -1)
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
 
-void push(SqStack2& ST, char x)
-{
-	if (ST.top + 1 == maxSize)
-	{
-		return;
-	}
-	else
-	{
-		ST.data[++ST.top] = x;
-	}
-}
-
-void pop(SqStack2& ST, char& x)
-{
-	if (isEmpty(ST))
-	{
-		return;
-	}
-	else
-	{
-		x = ST.data[ST.top--];
-	}
-}
-
-void getTop(SqStack2 s, char& x)
-{
-	if (!isEmpty(s))
-	{
-		x = s.data[s.top];
-	}
-}
 
 int charpter_3_11_sqrt_recursively(float A, float p, float e)
 {
@@ -1115,36 +1117,280 @@ int charpter_3_12_permutation(char c[], int k, int n)
 	return 0;
 }
 
+void charpter_4_1_1_transform(Stra& str, char ch1, char ch2)
+{
+	if (str.ch == nullptr)
+	{
+		return;
+	}
+	for (int i = 0; i < str.length; i++)
+	{
+		if (str.ch[i] == ch1)
+		{
+			str.ch[i] = ch2;
+		}
+	}
+}
+
+// a b c d e
+void charpter_4_1_1_reverse(Stra& str)
+{
+	if (str.ch == nullptr)
+	{
+		return;
+	}
+	for (int i = 0; i < str.length / 2; i++)
+	{
+		char temp = str.ch[i];
+		str.ch[i] = str.ch[str.length - i - 1];
+		str.ch[str.length - i - 1] = temp;
+	}
+}
+
+void charpter_6_level(BTNode* p)
+{
+	if (p == nullptr)
+	{
+		return;
+	}
+	BTNode* queue[maxSize];
+	int front = 0;
+	int rear = 0;
+	rear = (rear + 1) % maxSize;
+	queue[rear] = p;
+	while (front != rear)
+	{
+		front = (front + 1) % maxSize;
+		BTNode* q = queue[front];
+		cout << q->data << endl; // visit
+		if (q->lchild != nullptr)
+		{
+			rear = (rear + 1) % maxSize;
+			queue[rear] = q->lchild;
+		}
+		if (q->rchild != nullptr)
+		{
+			rear = (rear + 1) % maxSize;
+			queue[rear] = q->rchild;
+		}
+	}
+}
+
+int charpter_6_maxWidth(BTNode* p)
+{
+	int maxWidth = 1;
+	if (p == nullptr)
+	{
+		return 0;
+	}
+	BTNode* queue[maxSize];
+	int front = 0;
+	int rear = 0;
+	rear = (rear + 1) % maxSize;
+	queue[rear] = p;
+	while (front != rear)
+	{
+		front = (front + 1) % maxSize;
+		BTNode* q = queue[front];
+		cout << q->data << endl; // visit
+		if (q->lchild != nullptr)
+		{
+			rear = (rear + 1) % maxSize;
+			queue[rear] = q->lchild;
+		}
+		if (q->rchild != nullptr)
+		{
+			rear = (rear + 1) % maxSize;
+			queue[rear] = q->rchild;
+		}
+	}
+}
+
+// 奈斯，跟教材一模一样
+void charpter_6_preorderNonrecursion(BTNode* bt)
+{
+	if (bt != nullptr)
+	{
+		BTNode* stack[maxSize];
+		int top = -1;
+		BTNode* p;
+		stack[++top] = bt;
+		while (top != -1)
+		{
+			p = stack[top--];
+			cout << p->data << endl;
+			if (p->rchild != nullptr)
+			{
+				stack[++top] = p->rchild;
+			}
+			if (p->lchild != nullptr)
+			{
+				stack[++top] = p->lchild;
+			}
+		}
+	}
+}
+
+void charpter_6_inorderNonrecursion(BTNode* bt)
+{
+	if (bt != nullptr)
+	{
+		BTNode* stack[maxSize];
+		int top = -1;
+		BTNode* p = bt;
+		while (top != -1 || p != nullptr)
+		{
+			while (p != nullptr)
+			{
+				stack[++top] = p;
+				p = p->lchild;
+			}
+			p = stack[top--];
+			cout << p->data << endl;
+			p = p->rchild;
+
+		}
+	}
+}
+
+//单栈法
+void charpter_6_postorderNonrecursion(BTNode* bt)
+{
+	if (bt != nullptr)
+	{
+		BTNode* stack[maxSize];
+		int top = -1;
+		BTNode* p = bt;
+		BTNode* prev = nullptr;
+		while (top != -1 || p != nullptr)
+		{
+			while (p != nullptr)
+			{
+				stack[++top] = p;
+				p = p->lchild;
+			}
+			p = stack[top--];
+			if (p->rchild == nullptr || p->rchild == prev)
+			{
+				cout << p->data << endl;
+				prev = p;
+				p = nullptr;
+			}
+			else
+			{
+				stack[++top] = p;
+				p = p->rchild;
+			}
+
+		}
+	}
+}
+
+int visit[maxSize];
+void chapter_7_DFS(AGraph* G, int v)
+{
+	visit[v] = 1;
+	cout << v << endl;
+	ArcNode* p = G->adjlist[v].firstarc;
+
+	while (p != nullptr)
+	{
+		if (visit[p->adjvex] == 0)
+		{
+			chapter_7_DFS(G,p->adjvex);
+		}
+		p = p->nextarc;
+	}
+	
+}
+
+
+void chapter_7_BFS(AGraph* G, int v, int visit[maxSize])
+{
+	int queue[maxSize];
+	int front = 0;
+	int rear = 0;
+	rear = (rear + 1) % maxSize;
+	queue[rear] = v;
+	int temp;
+	ArcNode* p;
+	while (front != rear)
+	{
+		front = (front + 1) % maxSize;
+		temp = queue[front];
+		visit[temp] = 1;
+		cout << temp << endl;
+		p = G->adjlist[temp].firstarc;
+		while (p != nullptr)
+		{
+			if (visit[p->adjvex] == 0)
+			{
+				rear = (rear + 1) % maxSize;
+				queue[rear] = v;
+			}
+			p = p->nextarc;
+		}
+	}
+}
+
+void test(AGraph* G, int v, int visit[maxSize])
+{
+	int queue[maxSize];
+	int front = 0;
+	int rear = 0;
+	front = (front + 1) % maxSize;
+	queue[front] = v;
+	ArcNode* p;
+	int temp;
+	while (front != rear)
+	{
+		rear = (rear + 1) % maxSize;
+		temp = queue[rear];
+		visit[temp] = 1;
+		cout << temp << endl;
+		p = G->adjlist[temp].firstarc;
+		while (p != nullptr)
+		{
+			if (visit[p->adjvex] == 0)
+			{
+				front = (front + 1) % maxSize;
+				queue[front] = p->adjvex;
+			}
+			p = p->nextarc;
+		}
+	}
+}
+
 
 int main()
 {
-	SqList L;
-	//L.length = 0;
-	for (int i = 0; i < 8; i++)
-	{
-		L.data[i] = i + 1;
-		L.length++;
-	}
-	L.data[0] = 0;
-	L.data[1] = 5;
-	L.data[2] = 5;
-	L.data[3] = 3;
-	L.data[4] = 5;
-	L.data[5] = 7;
-	L.data[6] = 5;
-	L.data[7] = 5;
+	//SqList L;
+	////L.length = 0;
+	//for (int i = 0; i < 8; i++)
+	//{
+	//	L.data[i] = i + 1;
+	//	L.length++;
+	//}
+	//L.data[0] = 0;
+	//L.data[1] = 5;
+	//L.data[2] = 5;
+	//L.data[3] = 3;
+	//L.data[4] = 5;
+	//L.data[5] = 7;
+	//L.data[6] = 5;
+	//L.data[7] = 5;
 
-	char exp[10];
-	exp[0] = '1';
-	exp[1] = '2';
-	exp[2] = '3';
-	exp[3] = '4';
-	exp[4] = '*';
-	exp[5] = '+';
-	exp[6] = '+';
-	exp[7] = '5';
-	exp[8] = '/';
-	exp[9] = '\0';
+	//char exp[10];
+	//exp[0] = '1';
+	//exp[1] = '2';
+	//exp[2] = '3';
+	//exp[3] = '4';
+	//exp[4] = '*';
+	//exp[5] = '+';
+	//exp[6] = '+';
+	//exp[7] = '5';
+	//exp[8] = '/';
+	//exp[9] = '\0';
 	//L.length = 9;
 	//insertElem(L, 5, findElem(L, 5));
 	//chapter2_4_removeRange(L, 3, 5);
@@ -1166,7 +1412,7 @@ int main()
 	//LNode* B = chapter2_9_split(A);
 	//LNode* B = createList();
 	//chapter2_simulation2(A, B);
-	cout<< chapter3_valueOfRPN(exp) << endl;
+	//cout<< chapter3_valueOfRPN(exp) << endl;
 	//LNode* C = nullptr;
 	//merge_reverse(A, B, C);
 	//LNode* c = C->next;
@@ -1185,5 +1431,18 @@ int main()
 	//cout << findAndDelete(A, 2) << endl;
 	//int A[] = { 5,2,8,9,7,3,4,6 };
 	//cout << chapter2_10_findMin(A, 8, 1) << endl;
+	Stra* str = (Stra*)malloc(sizeof(Stra));
+	str->ch = (char*)malloc(sizeof(char));
+	str->ch[0] = 'a';
+	str->ch[1] = 'b';
+	str->ch[2] = 'c';
+	str->ch[3] = 'd';
+	str->ch[4] = 'e';
+	str->length = 5;
+	charpter_4_1_1_reverse(*str);
+	for (int i = 0; i < str->length; i++)
+	{
+		cout << str->ch[i]<<' ';
+	}
 	return 0;
 }
