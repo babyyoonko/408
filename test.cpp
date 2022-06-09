@@ -1333,33 +1333,300 @@ void chapter_7_BFS(AGraph* G, int v, int visit[maxSize])
 	}
 }
 
-void test(AGraph* G, int v, int visit[maxSize])
+// 1 4 7 8 9 12 14 15
+int chapter_9_BinarySearch(int R[], int low, int high, int k)
 {
-	int queue[maxSize];
-	int front = 0;
-	int rear = 0;
-	front = (front + 1) % maxSize;
-	queue[front] = v;
-	ArcNode* p;
-	int temp;
-	while (front != rear)
+	int mid;
+	while (low <= high)
 	{
-		rear = (rear + 1) % maxSize;
-		temp = queue[rear];
-		visit[temp] = 1;
-		cout << temp << endl;
-		p = G->adjlist[temp].firstarc;
-		while (p != nullptr)
+		mid = (low + high) / 2;
+		if (R[mid] == k)
 		{
-			if (visit[p->adjvex] == 0)
-			{
-				front = (front + 1) % maxSize;
-				queue[front] = p->adjvex;
-			}
-			p = p->nextarc;
+			return mid;
+		}
+		else if (R[mid] < k)
+		{
+			low = mid + 1;
+		}
+		else
+		{
+			high = mid - 1;
+		}
+	}
+	return 0;
+}
+
+BTNode* chapter_9_BSTSearch(BTNode* bt,int key)
+{
+	if (bt == nullptr)
+	{
+		return nullptr;
+	}
+	else
+	{
+		if (bt->data == key)
+		{
+			return bt;
+		}
+		else if (bt->data < key)
+		{
+			return chapter_9_BSTSearch(bt->rchild,key);
+		}
+		else
+		{
+			return chapter_9_BSTSearch(bt->lchild, key);
 		}
 	}
 }
+
+
+int preValue = -1;
+int hasInitPreValue = 0;
+int chapter_9_judgeBST(BTNode* bt)
+{
+	if (bt == nullptr)
+	{
+		return 1;
+	}
+	if (chapter_9_judgeBST(bt->lchild) == 1)
+	{
+		if (hasInitPreValue == 0)
+		{
+			hasInitPreValue = 1;
+		}
+		else
+		{
+			if (preValue >= bt->data)
+			{
+				return 0;
+			}
+		}
+		preValue = bt->data;
+		return chapter_9_judgeBST(bt->rchild);
+	}
+	else
+	{
+		return 0;
+	}
+}
+
+// 49 38 65 97 76 13 27 49
+// 38 49 65 97 76
+void charpte_8_InsertSort(int R[], int n)
+{
+	int temp;
+	for (int i = 1; i < n; i++)
+	{
+		temp = R[i];
+		int j;
+		for (j = i; j > 0; j--)
+		{
+			if (R[j - 1] > temp)
+			{
+				R[j] = R[j - 1];
+			}
+			else
+			{
+				break;
+			}
+		}
+		R[j] = temp;
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cout << R[i] << ' ';
+	}
+}
+
+
+// 49 38 65 97 76 13 27 49
+// 38 49 65 76 13 27 49 97
+void charpte_8_BubbleSort(int R[], int n)
+{
+	int swap;
+	int temp;
+	for (int i = 0; i < n-1; i++)
+	{
+		swap = 0;
+		for (int j = 0; j < n - 1 - i; j++)
+		{
+			if (R[j] > R[j + 1])
+			{
+				swap = 1;
+				temp = R[j];
+				R[j] = R[j + 1];
+				R[j + 1] = temp;
+
+			}
+		}
+		if (swap == 0)
+		{
+			break;
+		}
+	}
+	for (int i = 0; i < n; i++)
+	{
+		cout << R[i] << ' ';
+	}
+}
+
+
+//			49
+// 49 38 65 97 76 13 27 49
+// 27 38 13 49 76 97 65 49
+int charpte_8_partition(int R[], int low, int high)
+{
+	int pivot = R[low];
+	while (low < high)
+	{
+		while (low < high && R[high] >= pivot)
+		{
+			--high;
+		}
+		R[low] = R[high];
+		while (low < high && R[low] <= pivot)
+		{
+			++low;
+		}
+		R[high] = R[low];
+	}
+	R[low] = pivot;
+	return low;
+}
+
+void quickSort(int R[], int low, int high)
+{
+	if (low < high)
+	{
+		int partitionIndex = charpte_8_partition(R, low, high);
+		quickSort(R, low, partitionIndex - 1);
+		quickSort(R, partitionIndex + 1, high);
+	}
+}
+
+
+// 49 38 65 97 76 13 27 49
+void charpte_8_SelectSort(int R[], int n)
+{
+	int minIndex;
+	for (int i = 0; i < n-1; i++)
+	{
+		minIndex = i;
+		for (int j = i+1; j < n; j++)
+		{
+			if (R[j] < R[minIndex])
+			{
+				minIndex = j;
+			}
+		}
+		int temp = R[i];
+		R[i] = R[minIndex];
+		R[minIndex] = temp;
+		for (int i = 0; i < n; i++)
+		{
+			cout << R[i] << ' ';
+		}
+		cout << endl;
+	}
+}
+
+// 这什么鬼东西啊，2 * i本来就错的，如果你是0开始那就是2i+1.为什么下面多了个判断奇偶性就对了？
+//void charpte_8_Sift(int R[], int low, int high)
+//{
+//	int i = low;
+//	int j = 2 * i;
+//	int temp;
+//	while (j <= high)
+//	{
+//		if (j < high && R[j + 1] > R[j])
+//		{
+//			j++;
+//		}
+//		if (R[i] < R[j])
+//		{
+//			temp = R[i];
+//			R[i] = R[j];
+//			R[j] = temp;
+//			i = j;
+//			j = 2 * i;
+//		}
+//		else
+//		{
+//			break;
+//		}
+//	}
+//	printArray(R, 8);
+//
+//}
+//
+//void charpte_8_HeapSort(int R[], int n)
+//{
+//	int siftIndex = n / 2;
+//	if (n % 2 == 0)
+//	{
+//		siftIndex--;
+//	}
+//	// 调整成堆
+//	for (int i = siftIndex; i >= 0; i--)
+//	{
+//		charpte_8_Sift(R, i, n - 1);
+//	}
+//	int temp;
+//	// 调整成堆后，堆顶已经是最大值，交换后逐次调整成堆
+//	for (int i = n-1; i>0 ; i--)
+//	{
+//		temp = R[i];
+//		R[i] = R[0];
+//		R[0] = temp;
+//		charpte_8_Sift(R, 0, i - 1);
+//	}
+//}
+
+
+void sift(int R[], int low, int high)
+{
+	int i = low;
+	int j = 2 * i + 1;
+	while (j <= high)
+	{
+		if (j < high && R[j + 1] > R[j])
+		{
+			++j;
+		}
+		if (R[i] < R[j])
+		{
+			int temp = R[i];
+			R[i] = R[j];
+			R[j] = temp;
+			i = j;
+			j = 2 * i + 1;
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+
+
+//int R[8] = { 49, 38, 65, 97, 76, 13, 27, 49 };
+void heapSort(int R[], int n)
+{
+	int siftIndex = n / 2 - 1;
+	for (int i = siftIndex; i >= 0; --i)
+	{
+		sift(R, i, n - 1);
+	}
+	for (int i = n-1; i >= 1; --i)
+	{
+		int temp = R[0];
+		R[0] = R[i];
+		R[i] = temp;
+		sift(R, 0, i - 1);
+	}
+}
+
+
 
 
 int main()
@@ -1431,18 +1698,28 @@ int main()
 	//cout << findAndDelete(A, 2) << endl;
 	//int A[] = { 5,2,8,9,7,3,4,6 };
 	//cout << chapter2_10_findMin(A, 8, 1) << endl;
-	Stra* str = (Stra*)malloc(sizeof(Stra));
-	str->ch = (char*)malloc(sizeof(char));
-	str->ch[0] = 'a';
-	str->ch[1] = 'b';
-	str->ch[2] = 'c';
-	str->ch[3] = 'd';
-	str->ch[4] = 'e';
-	str->length = 5;
-	charpter_4_1_1_reverse(*str);
-	for (int i = 0; i < str->length; i++)
-	{
-		cout << str->ch[i]<<' ';
-	}
+	//Stra* str = (Stra*)malloc(sizeof(Stra));
+	//str->ch = (char*)malloc(sizeof(char));
+	//str->ch[0] = 'a';
+	//str->ch[1] = 'b';
+	//str->ch[2] = 'c';
+	//str->ch[3] = 'd';
+	//str->ch[4] = 'e';
+	//str->length = 5;
+	//charpter_4_1_1_reverse(*str);
+	//for (int i = 0; i < str->length; i++)
+	//{
+	//	cout << str->ch[i]<<' ';
+	//}
+	//int R[9] = { 49, 38, 65, 97, 76, 13, 27, 49, 88 };
+	int R[5] = { 3,2,1,4,5 };
+	//quickSort(R, 0,7);
+	//charpte_8_SelectSort(R, 8);
+	heapSort(R,5);
+	printArray(R, 5);
 	return 0;
 }
+
+
+
+

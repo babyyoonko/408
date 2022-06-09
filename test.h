@@ -1,5 +1,6 @@
 #pragma once
-
+#include<iostream>
+using namespace std;
 #define maxSize 100
 
 typedef struct LNode
@@ -7,6 +8,13 @@ typedef struct LNode
 	int data;
 	struct LNode* next;
 }LNode;
+
+typedef struct DLNode
+{
+	int data;
+	struct DLNode* next;
+	struct DLNode* prior;
+}DLNode;
 
 typedef struct SqList
 {
@@ -93,3 +101,12 @@ typedef struct
 	int e;
 	VNode adjlist[maxSize];
 }AGraph;
+
+void printArray(int R[], int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		std::cout << R[i] << ' ';
+	}
+	std::cout << std::endl;
+}
